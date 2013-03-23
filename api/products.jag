@@ -9,13 +9,15 @@ function selectProducts() {
     var content;
     var category_id = request.getParameter("category_id");
     var product_id = request.getParameter("product_id");
+    var logo = request.getParameter("logo");
     if(request.getContent() != null && request.getContent() != ""){
         content = parse(request.getContent());
-        log.info("cont="+content);
         category_id = content.category_id;
         product_id = content.product_id;
+        logo = content.logo;
     }
-    var query = "SELECT name,description,category_id,id FROM product";
+    var query =
+            (logo) ? "SELECT logo from product" : "SELECT name,description,category_id,id FROM product";
     var whereClause = "";
     if(category_id != null && product_id != null){
        whereClause = " WHERE category_id=" + category_id + " AND id=" + product_id;
