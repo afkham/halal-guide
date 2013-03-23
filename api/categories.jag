@@ -1,0 +1,32 @@
+<%
+include("../util/db.jag");
+
+var method = request.getMethod();
+var db = application.get('database');
+var log = new Log();
+
+function selectAllCategories() {
+    return db.query("SELECT * FROM category");
+}
+
+if(method == "GET"){
+    try{
+        print(selectAllCategories());
+    } catch(e){
+        print("Error occurred");
+    }
+} else if(method == "PUT"){
+
+    var content = parse(request.getContent());
+    var name = content.name;
+    var description = content.description;
+
+    try{
+        db.query("INSERT INTO category (name,description) VALUES ('"+ name +"','"+ description+"')");
+        print("Successfully added " + name );
+    } catch(e){
+        log.error("Error occurred. " + e);
+        print("Error occurred. " + e);
+    }
+}
+%>

@@ -1,0 +1,6 @@
+<%
+  var file = new File('file:///tmp/test.png');
+response.contentType = "image/png";
+//file.open('r');
+print(file.getStream());
+%>

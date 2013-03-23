@@ -1,0 +1,39 @@
+<%
+include("../dbmodel/company_queries.jag");
+%>
+
+<html>
+<head>
+    <title>Halal Sri Lanka Admin - Companies</title>
+</head>
+
+<body>
+
+<table border="1">
+<%
+var companies = selectAllCompanies();
+
+for (var i in companies) {
+    var company = companies[i];
+    var company_id = company.id;
+%>
+
+    <tr>
+      <td>
+        <img src="../api/companies?logo=true&company_id=<%= company_id %>"/>
+      </td>
+      <td><%= company.name%></td>
+      <td><%= company.description%></td>
+      <td>Delete</td>
+    </tr>
+
+<%
+}
+%>
+
+</table>
+
+
+</body>
+
+</html>

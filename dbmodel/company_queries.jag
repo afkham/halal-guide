@@ -1,0 +1,7 @@
+<%
+include("../util/db.jag");
+
+function selectAllCompanies() {
+    return db.query("SELECT id,name,description FROM company");
+}
+%>

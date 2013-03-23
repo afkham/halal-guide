@@ -1,0 +1,39 @@
+<%
+include("../util/db.jag");
+
+var method = request.getMethod();
+var db = application.get('database');
+var log = new Log();
+
+function selectProducts() {
+    var content;
+    var category_id = request.getParameter("category_id");
+    var product_id = request.getParameter("product_id");
+    if(request.getContent() != null && request.getContent() != ""){
+        content = parse(request.getContent());
+        log.info("cont="+content);
+        category_id = content.category_id;
+        product_id = content.product_id;
+    }
+    var query = "SELECT name,description,category_id,id FROM product";
+    var whereClause = "";
+    if(category_id != null && product_id != null){
+       whereClause = " WHERE category_id=" + category_id + " AND id=" + product_id;
+    } else if(category_id == null && product_id != null){
+        whereClause = " WHERE id=" + product_id;
+    } else if(category_id != null && product_id == null){
+        whereClause = " WHERE category_id=" + category_id;
+    }
+    query += whereClause;
+    log.info(query);
+    return db.query(query);
+}
+
+if(method == "GET"){
+    try{
+        print(selectProducts());
+    }catch(e){
+        print("Error occurred. " + e);
+    }
+}
+%>
