@@ -13,7 +13,6 @@ if (method == "GET") {
     if (searchStr != null) {
         searchStr = searchStr.toLowerCase();
         var query = "SELECT name,description from company WHERE LOWER(name) LIKE '%"+searchStr+ "%' or LOWER(description) LIKE '%"+searchStr+"%'";
-        log.info(query);
         print(db.query(query));
     } else if (logoReq) {
         var result = db.query("SELECT logo FROM company where id=" + company_id);
