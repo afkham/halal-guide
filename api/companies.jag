@@ -8,8 +8,14 @@ var log = new Log("log.company");
 
 if (method == "GET") {
     var logoReq = request.getParameter("logo");
+    var searchStr = request.getParameter("search");
     var company_id = request.getParameter("company_id");
-    if (logoReq) {
+    if (searchStr != null) {
+        searchStr = searchStr.toLowerCase();
+        var query = "SELECT name,description from company WHERE LOWER(name) LIKE '%"+searchStr+ "%' or LOWER(description) LIKE '%"+searchStr+"%'";
+        log.info(query);
+        print(db.query(query));
+    } else if (logoReq) {
         var result = db.query("SELECT logo FROM company where id=" + company_id);
         response.contentType = "image/png";
         print(result[0].logo);
