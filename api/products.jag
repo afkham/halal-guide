@@ -20,7 +20,8 @@ function selectProducts() {
 
     var query;
     if(searchStr != null){
-       query = "SELECT name,description from product WHERE LOWER(name) LIKE '%"+searchStr+ "%' or LOWER(description) LIKE '%"+searchStr+"%'";
+        searchStr = searchStr.toLowerCase();
+        query = "SELECT name,description from product WHERE LOWER(name) LIKE '%"+searchStr+ "%' or LOWER(description) LIKE '%"+searchStr+"%'";
     } else {
        query =
             (logo) ? "SELECT logo from product" : "SELECT name,description,category_id,id FROM product";
