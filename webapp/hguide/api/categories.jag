@@ -19,10 +19,9 @@ if(method == "GET"){
 
     var content = parse(request.getContent());
     var name = content.name;
-    var description = content.description;
 
     try{
-        db.query("INSERT INTO category (name,description) VALUES ('"+ name +"','"+ description+"')");
+        db.query("INSERT INTO category (name) VALUES ('"+ name +"')");
         print("Successfully added product category " + name );
     } catch(e){
         log.error("Error occurred. " + e);

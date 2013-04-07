@@ -6,36 +6,14 @@ var db = application.get('database');
 var log = new Log();
 
 function selectProducts() {
-    var content;
-    var category_id = request.getParameter("category_id");
     var product_id = request.getParameter("product_id");
-    var logo = request.getParameter("logo");
-    var searchStr = request.getParameter("search");
-    if(request.getContent() != null && request.getContent() != ""){
-        content = parse(request.getContent());
-        category_id = content.category_id;
-        product_id = content.product_id;
-        logo = content.logo;
-    }
 
     var query;
-    if(searchStr != null){
-        searchStr = searchStr.toLowerCase();
-        query = "SELECT name,description from product WHERE LOWER(name) LIKE '%"+searchStr+ "%' or LOWER(description) LIKE '%"+searchStr+"%'";
+    if(product_id == null){
+       query = "SELECT id,name,brand_id from product";
     } else {
-       query =
-            (logo) ? "SELECT logo from product" : "SELECT name,description,category_id,id FROM product";
-        var whereClause = "";
-        if(category_id != null && product_id != null){
-           whereClause = " WHERE category_id=" + category_id + " AND id=" + product_id;
-        } else if(category_id == null && product_id != null){
-            whereClause = " WHERE id=" + product_id;
-        } else if(category_id != null && product_id == null){
-            whereClause = " WHERE category_id=" + category_id;
-        }
-        query += whereClause;
+       query = "SELECT id,name,brand_id from product where id=" + product_id;
     }
-    log.info(query);
     return db.query(query);
 }
 

@@ -34,15 +34,19 @@ if (method == "GET") {
     logo.saveAs("file:///tmp/" + logo.getName());
 
     try {
-        db.query("INSERT INTO category (name,company_id,type_id,logo) VALUES ('" + name + "'," + company_id + + "," + type_id + ", LOAD_FILE('/tmp/" + logo.getName() + "'))");
+        db.query("INSERT INTO category (name,company_id,type_id,logo) VALUES ('" + name + "'," + company_id
+                         + "," + type_id + ", LOAD_FILE('/tmp/" + logo.getName() + "'))");
 
         // select the brand
         brand_id = db.query("SELECT id from category where name='"+ name+"'");
 
         // insert entries into brand_category table
-        for (var i = 0; i < category_ids.length; i++) {
-           var category_id = category_ids[i];
-           db.query("INSERT INTO brand_category (brand_id,category_id) VALUES (" + brand_id + "," + category_id + ")");
+        if(category_ids instanceof Array){
+            for (var i = 0; i < category_ids.length; i++) {
+                addBrandToCategory(category_ids[i], brand_id);
+            }
+        } else {
+            addBrandToCategory(category_ids, brand_id);
         }
 
         print("Successfully added brand " + name);
@@ -51,5 +55,9 @@ if (method == "GET") {
         print("Error occurred. " + e);
     }
 }
+
+function addBrandToCategory(category_id, brand_id){
+    var category_id = category_ids[i];
+    db.query("INSERT INTO brand_category (brand_id,category_id) VALUES (" + brand_id + "," + category_id + ")");
+}
 %>
-       // var query = "SELECT name,description from company WHERE LOWER(name) LIKE '%"+searchStr+ "%' or LOWER(description) LIKE '%"+searchStr+"%'";

@@ -7,17 +7,10 @@ var db = application.get('database');
 var log = new Log("log.company");
 
 if (method == "GET") {
-    var logoReq = request.getParameter("logo");
-    var searchStr = request.getParameter("search");
     var company_id = request.getParameter("company_id");
-    if (searchStr != null) {
-        searchStr = searchStr.toLowerCase();
-        var query = "SELECT name,description from company WHERE LOWER(name) LIKE '%"+searchStr+ "%' or LOWER(description) LIKE '%"+searchStr+"%'";
+    if (company_id != null) {
+        var query = "SELECT name from company WHERE id=" + company_id;
         print(db.query(query));
-    } else if (logoReq) {
-        var result = db.query("SELECT logo FROM company where id=" + company_id);
-        response.contentType = "image/png";
-        print(result[0].logo);
     } else {
         try {
             print(selectAllCompanies());
@@ -28,13 +21,9 @@ if (method == "GET") {
 } else if (method == "PUT" || method == "POST") {
 
     var name = request.getParameter("name");
-    var description = request.getParameter("description");
-    var logo = request.getFile("logo");
-
-    logo.saveAs("file:///tmp/" + logo.getName());
 
     try {
-        db.query("INSERT INTO company (name,description,logo) VALUES ('" + name + "','" + description + "', LOAD_FILE('/tmp/" + logo.getName() + "'))");
+        db.query("INSERT INTO company (name) VALUES ('" + name + "'))");
         print("Successfully added company " + name);
     } catch (e) {
         log.error("Error occurred. " + e);
