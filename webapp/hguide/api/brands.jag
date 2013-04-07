@@ -4,24 +4,26 @@ var db = application.get('database');
 var log = new Log("log.brands");
 
 var brand_id;
+var result;
 if (method == "GET") {
     var logoReq = request.getParameter("logo");
-    var searchStr = request.getParameter("search");
     brand_id = request.getParameter("brand_id");
     var query;
-    if (searchStr != null) { //TODO: impl
-        searchStr = searchStr.toLowerCase();
-        print(db.query(query));
-    } else if (brand_id == null) { // get all brands
+    if (brand_id == null) { // get all brands
         query = "SELECT id,name,type_id,company_id from brand";
         print(db.query(query));
     } else if (logoReq) {
-        var result = db.query("SELECT logo FROM brand where id=" + brand_id);
+        result = db.query("SELECT logo FROM brand where id=" + brand_id);
         response.contentType = "image/png";
         print(result[0].logo);
     } else if (brand_id != null) {
         query = "SELECT id,name,type_id,company_id from brand where id=" + brand_id;
-        print(db.query(query));
+
+        result = db.query(query);
+
+        query = "SELECT id,name from product where brand_id=" + brand_id;
+        var result2 = db.query(query);
+        print(result.concat(result2));
     }
 } else if (method == "PUT" || method == "POST") {
 
