@@ -1,0 +1,55 @@
+<%
+var method = request.getMethod();
+var db = application.get('database');
+var log = new Log("log.brands");
+
+var brand_id;
+if (method == "GET") {
+    var logoReq = request.getParameter("logo");
+    var searchStr = request.getParameter("search");
+    brand_id = request.getParameter("brand_id");
+    var query;
+    if (searchStr != null) { //TODO: impl
+        searchStr = searchStr.toLowerCase();
+        print(db.query(query));
+    } else if (brand_id == null) { // get all brands
+        query = "SELECT id,name,type_id,company_id from brand";
+        print(db.query(query));
+    } else if (logoReq) {
+        var result = db.query("SELECT logo FROM brand where id=" + brand_id);
+        response.contentType = "image/png";
+        print(result[0].logo);
+    } else if (brand_id != null) {
+        query = "SELECT id,name,type_id,company_id from brand where id=" + brand_id;
+        print(db.query(query));
+    }
+} else if (method == "PUT" || method == "POST") {
+
+    var name = request.getParameter("name");
+    var company_id = request.getParameter("company_id");
+    var type_id = request.getParameter("type_id");
+    var category_ids = request.getParameter("category_id");  // array
+    var logo = request.getFile("logo");
+
+    logo.saveAs("file:///tmp/" + logo.getName());
+
+    try {
+        db.query("INSERT INTO category (name,company_id,type_id,logo) VALUES ('" + name + "'," + company_id + + "," + type_id + ", LOAD_FILE('/tmp/" + logo.getName() + "'))");
+
+        // select the brand
+        brand_id = db.query("SELECT id from category where name='"+ name+"'");
+
+        // insert entries into brand_category table
+        for (var i = 0; i < category_ids.length; i++) {
+           var category_id = category_ids[i];
+           db.query("INSERT INTO brand_category (brand_id,category_id) VALUES (" + brand_id + "," + category_id + ")");
+        }
+
+        print("Successfully added brand " + name);
+    } catch (e) {
+        log.error("Error occurred. " + e);
+        print("Error occurred. " + e);
+    }
+}
+%>
+       // var query = "SELECT name,description from company WHERE LOWER(name) LIKE '%"+searchStr+ "%' or LOWER(description) LIKE '%"+searchStr+"%'";

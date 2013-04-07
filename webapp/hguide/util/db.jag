@@ -1,7 +1,7 @@
 <%
 var db = application.get('database');
 if (db == null) {
-    db = new Database("jdbc:mysql://localhost:3306/halal_db", "root", "root");
+    db = new Database("jdbc:mysql://localhost:3306/hguide_db", "root", "root");
 
     //db.query("SET autocommit = 0;");
     application.put('database', db);
